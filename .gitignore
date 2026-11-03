@@ -65,3 +65,14 @@ __pycache__/
 *.swp
 *.swo
 *~
+
+# Generated experiment logs
+results/experiment_logs/
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Future trained ML models
+ml/models/*.pkl
+ml/models/*.joblib
