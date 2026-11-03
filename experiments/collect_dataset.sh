@@ -24,7 +24,33 @@ WORKLOAD="$PROJECT_DIR/experiments/run_workload.sh"
 DATA_DIR="$PROJECT_DIR/ml/datasets"
 LOG_DIR="$PROJECT_DIR/results/experiment_logs"
 
-CGROUP_ID="11658"
+# Automatically identify the running Docker container
+CONTAINER="ebpf-shield-test"
+
+CONTAINER_PID=$(docker inspect -f '{{.State.Pid}}' "$CONTAINER")
+
+if [[ ! "$CONTAINER_PID" =~ ^[0-9]+$ ]] || [[ "$CONTAINER_PID" -eq 0 ]]; then
+    echo "[ERROR] Docker container is not running."
+    exit 1
+fi
+
+CGROUP_PATH=$(awk -F: '$1=="0" {print $3}' "/proc/$CONTAINER_PID/cgroup")
+
+if [[ -z "$CGROUP_PATH" ]]; then
+    echo "[ERROR] Could not determine container cgroup path."
+    exit 1
+fi
+
+CGROUP_DIR="/sys/fs/cgroup${CGROUP_PATH}"
+
+if [[ ! -d "$CGROUP_DIR" ]]; then
+    echo "[ERROR] Container cgroup directory not found."
+    exit 1
+fi
+
+CGROUP_ID=$(stat -Lc '%i' "$CGROUP_DIR")
+
+echo "[OK] Automatically detected Docker cgroup ID: $CGROUP_ID"
 WINDOW_SECONDS=5
 
 if [[ $# -ne 2 ]]; then
