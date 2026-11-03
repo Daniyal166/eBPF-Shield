@@ -53,3 +53,15 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# eBPF-Shield: Python generated files
+__pycache__/
+*.pyc
+
+# Local development backups
+*_backup.py
+
+# Local editor files
+*.swp
+*.swo
+*~

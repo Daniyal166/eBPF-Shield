@@ -1,0 +1,3 @@
+workload,write,open,rename,unlink,total_events,max_observed_brs,alert_observed,perf_events_lost
+synthetic_file_operations,24,583,40,40,687,1.000,yes,0
+benign_tar_archive,29,164,0,0,193,0.500,no,0
